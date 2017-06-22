@@ -1,0 +1,55 @@
+var ObjectID = require('mongodb').ObjectID;
+
+var getDb= require('./getDb');
+// var initialize= require('./initialize');
+
+var api= require('require-all')({
+  dirname     :  __dirname+'/api',
+  excludeDirs :  /^\.(git|svn)$/,
+  recursive   : true
+});
+
+var models= require('../../models');
+
+module.exports = function () {
+
+	var modelApi= Object.keys(models)
+	.map(function (key) {
+		return {model:models[key]};
+	})
+	.map(api.modelFunctions)
+	.map(api.find)
+	.map(api.findOne)
+	.map(api.create)
+	.map(api.updateMany)
+	.map(api.update)
+	.map(api.destroyMany)
+	.map(api.destroy)
+	.map(api.native)
+	.map(api.populate2)
+	.reduce(function (modelObj,obj) {
+		modelObj[obj.model.fileName]= obj.model; //fileName instead of modelName
+		return modelObj;
+	},{});
+
+	//Api static methods
+	modelApi.id2bson = function (id) {
+		return new ObjectID(id);
+	};
+
+	modelApi.generateId = function () {
+		return new ObjectID();
+	};
+
+	modelApi.ObjectID = function () {
+		return ObjectID;
+	};
+
+	modelApi.db= function () {
+		return getDb();
+	};
+
+	modelApi.ObjectID= ObjectID;
+
+	return modelApi;
+}
