@@ -18,6 +18,11 @@ module.exports= function (input) {
 	};
 
 	findApiFunc.prototype.sort = function(sortArgs) {
+		if(sortArgs.hasOwnProperty('id'))
+		{
+			sortArgs['_id']=sortArgs.id;
+			delete sortArgs['id'];
+		}
 		this._query=this._query.then((q)=>{return Promise.resolve(q.sort(sortArgs))});
 		return this;
 	};

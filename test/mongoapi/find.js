@@ -80,6 +80,30 @@ describe('Testing mongoapi.find',function () {
 		});
 	});
 
+
+	it('Should sort by _id to find multiple created documents',function (done) {
+		var find=require('../../app/db/mongodb/api/find');
+
+		getDb()
+		.then(function (db) {
+			return db.collection('user').insertMany([{name:'Hello',position:1},{name:'Hello',position:2}])
+		})
+		.then(function () {
+			var newmodel=find(input);
+			// console.log(newmodel);
+			return newmodel.model.find({name:'Hello'}).sort({id:-1}).toArray();
+		})
+		.then(function (users) {
+			expect(users).to.have.length(2);
+			expect(users[0]).to.have.property('position',2);
+			expect(users[1]).to.have.property('position',1);
+			done();
+		})
+		.catch(function (err) {
+			console.log(err);
+		});
+	});
+
 	it('Should limit find multiple created documents',function (done) {
 		var find=require('../../app/db/mongodb/api/find');
 
