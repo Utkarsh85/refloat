@@ -2,6 +2,7 @@ var ObjectId= require('mongodb').ObjectId;
 
 var find= require('../core/find');
 var projectionUtil= require('../utils/projectUtil');
+var _id2id= require('../utils/_id2id');
 var getDb= require('../getDb');
 var allModels= require('../../../models');
 
@@ -58,10 +59,11 @@ module.exports= function (input) {
 					temp[modelRef.modelReference]={};
 					resolvedList[index].forEach(function (resolved) {
 						// console.log(resolved);
+						resolved= _id2id(allModels[modelRef.modelName])(resolved);
 						if(options && options.hasOwnProperty('toJSON') && modelRef.toJSON && typeof(modelRef.toJSON)==="function")
-							temp[modelRef.modelReference][resolved._id.toHexString()]=modelRef.toJSON(resolved);
+							temp[modelRef.modelReference][resolved.id]=modelRef.toJSON(resolved);
 						else
-							temp[modelRef.modelReference][resolved._id.toHexString()]=resolved;
+							temp[modelRef.modelReference][resolved.id]=resolved;
 					});
 					return temp;
 				})
