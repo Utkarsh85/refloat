@@ -13,7 +13,7 @@ module.exports= function (model) {
 		{
 			Object.keys(model.schema.reference)
 			.forEach(function (reference) {
-				if(tempObj.hasOwnProperty(reference))
+				if(tempObj.hasOwnProperty(reference) && tempObj[reference])
 				{
 					tempObj[reference]=tempObj[reference].toString();
 				}
