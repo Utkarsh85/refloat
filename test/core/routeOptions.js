@@ -1,13 +1,18 @@
 var chain= require('frontle-chain');
-var routeOptions= require('../../app/core/middlewares/routeOptions');
+var routeOptions;
 
 var expect= require('chai').expect;
 
 describe('Testing core.routeOptions',function () {
 
+	before(function (done) {
+		routeOptions= require('../../app/core/middlewares/routeOptions');
+		done();
+	});
+
 	it('Should pass the test for find',function (done) {
 		// expect()
-
+		
 		chain({url:'/user',method:'GET'},[function (ctx,next) {
 			routeOptions()(ctx,null,next);
 		},function (ctx,next) {

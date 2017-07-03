@@ -20,7 +20,7 @@ try
 }
 catch(err)
 {
-
+	throw(err);
 }
 
 

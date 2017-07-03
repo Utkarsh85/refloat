@@ -11,7 +11,7 @@ try
 }
 catch(err)
 {
-
+	throw(err);
 }
 
 module.exports= controllers;

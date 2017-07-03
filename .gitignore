@@ -1,5 +1,5 @@
 ./api
-config
+./config
 # Logs
 logs
 *.log
