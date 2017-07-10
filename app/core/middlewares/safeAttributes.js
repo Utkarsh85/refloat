@@ -1,4 +1,5 @@
 var models= require('../../models');
+var dotProp = require('dot-prop');
 
 module.exports= function () {
 	return function (req,res,next) {
@@ -6,36 +7,38 @@ module.exports= function () {
 		{
 			if(models[req.options.controller].schema.hasOwnProperty('safeAttributes'))
 			{
-				// models[req.options.controller].schema.safeAttributes.map(function (val) {
-				// 	delete req.body[val];
-				// 	delete req.Params[val];
-				// });
 
 				var safeObj=models[req.options.controller].schema.safeAttributes;
 
-				// for req.body
-				for(var key in req.body)
+				for(var key in safeObj)
 				{
-					if(safeObj.hasOwnProperty(key) && typeof(safeObj[key])=="boolean" && safeObj[key]==true)
+					if(typeof(dotProp.get(safeObj,key))=="boolean" && dotProp.get(safeObj,key)==true)
 					{
-						delete req.body[key];
+						dotProp.delete(req.body,key);
+						dotProp.delete(req.Params,key);
 					}
-					else if(safeObj.hasOwnProperty(key) && typeof(safeObj[key])=="function" && safeObj[key](req,req.body[key])==true)
-					{
-						delete req.body[key];
-					}
-				}
 
-				// for req.Params
-				for(var key in req.Params)
-				{
-					if(safeObj.hasOwnProperty(key) && typeof(safeObj[key])=="boolean" && safeObj[key]==true)
+					if(typeof(dotProp.get(safeObj,key))=="function" && dotProp.get(safeObj,key)(req,dotProp.get(req.body,key))==true)
 					{
-						delete req.Params[key];
+						dotProp.delete(req.body,key);
+						dotProp.delete(req.Params,key);
 					}
-					else if(safeObj.hasOwnProperty(key) && typeof(safeObj[key])=="function" && safeObj[key](req,req.Params[key])==true)
+
+					if(dotProp.get(req,'user.id'))
 					{
-						delete req.Params[key];
+						if(typeof(dotProp.get(safeObj,key))=="object" && dotProp.get(safeObj,key).hasOwnProperty(dotProp.get(req,'user.auth','authenticated')) && dotProp.get(safeObj,key)[dotProp.get(req,'user.auth','authenticated')]==true)
+						{
+							dotProp.delete(req.body,key);
+							dotProp.delete(req.Params,key);
+						}
+					}
+					else
+					{
+						if(typeof(dotProp.get(safeObj,key))=="object" && dotProp.get(safeObj,key).hasOwnProperty(dotProp.get(req,'user.auth','not_authenticated')) && dotProp.get(safeObj,key)[dotProp.get(req,'user.auth','not_authenticated')]==true)
+						{
+							dotProp.delete(req.body,key);
+							dotProp.delete(req.Params,key);
+						}
 					}
 				}
 				next();

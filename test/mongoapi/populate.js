@@ -4,8 +4,6 @@ var path= require('path');
 var clearRequire = require('clear-require');
 var expect= require('chai').expect;
 
-var input={model:{filename:'User',modelName:'user'}};
-
 describe('Testing mongoapi.populate',function () {
 
 	before(function (done) {

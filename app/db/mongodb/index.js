@@ -27,6 +27,7 @@ module.exports = function () {
 	.map(api.destroy)
 	.map(api.native)
 	.map(api.populate2)
+	.map(api.validate)
 	.reduce(function (modelObj,obj) {
 		modelObj[obj.model.fileName]= obj.model; //fileName instead of modelName
 		return modelObj;
