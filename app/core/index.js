@@ -19,6 +19,7 @@ app.use(middlewares.routeValidate);
 app.use(middlewares.routeOptions());
 
 app.use(middlewares.token());
+app.use(middlewares.queryModify());
 app.use(middlewares.safeAttributes());
 
 middlewares.routeLink.index(app);
