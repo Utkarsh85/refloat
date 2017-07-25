@@ -18,7 +18,7 @@ module.exports= function (input) {
 		if(Array.isArray(obj) )
 		{
 			obj=obj.map(function (val) {
-				delete val._id;
+				delete val._id; //would not allow to directly edit _id
 				return val;
 			});
 
@@ -38,7 +38,7 @@ module.exports= function (input) {
 		}
 		else
 		{
-			delete obj._id;
+			delete obj._id; //would not allow to directly edit _id
 
 			return validate(model.schema,obj)
 			.then(id2_id(model))

@@ -44,6 +44,29 @@ describe('Testing mongoapi.create',function () {
 		})
 	});
 
+	it('Should create the document with preset id',function (done) {
+		var create=require('../../app/db/mongodb/api/create');
+
+		getDb()
+		.then(function (db) {
+			var newmodel=create(input);
+			// console.log(newmodel);
+			return Promise.all([db,newmodel.model.create({name:'Hello',id:1})]);
+		})
+		.then(function (db) {
+			return db[0].collection('user').find().toArray();
+		})
+		.then(function (users) {
+			expect(users).to.have.length(1);
+			expect(users[0]).to.have.property('name','Hello');
+			expect(users[0]).to.have.property('_id',1);
+			done();
+		})
+		.catch(function (err) {
+			console.log(err);
+		})
+	});
+
 	it('Should create multiple documents',function (done) {
 		var create=require('../../app/db/mongodb/api/create');
 
