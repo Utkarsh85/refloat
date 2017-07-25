@@ -1,4 +1,5 @@
 var extend= require('util')._extend;
+var queryHelper= require('../core/utils/queryHelper');
 
 module.exports= function (model) {
 
@@ -13,9 +14,13 @@ module.exports= function (model) {
 		{
 			Object.keys(model.schema.reference)
 			.forEach(function (reference) {
-				if(tempObj.hasOwnProperty(reference) && tempObj[reference])
+				if(tempObj.hasOwnProperty(reference) && tempObj[reference] && Array.isArray(tempObj[reference]))
 				{
-					tempObj[reference]=tempObj[reference].toString();
+					tempObj[reference]=tempObj[reference].map(queryHelper.toStringId);
+				}
+				else if(tempObj.hasOwnProperty(reference) && tempObj[reference])
+				{
+					tempObj[reference]=queryHelper.toStringId(tempObj[reference]);
 				}
 			})
 		}
@@ -23,7 +28,7 @@ module.exports= function (model) {
 		if(tempObj && tempObj.hasOwnProperty('_id') && !tempObj.hasOwnProperty('id'))
 		{
 			var newObj=extend({},tempObj);
-			newObj.id=tempObj._id.toString();
+			newObj.id=queryHelper.toStringId(tempObj._id);
 			delete newObj._id;
 			return newObj;
 		}
