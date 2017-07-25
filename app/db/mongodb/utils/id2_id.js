@@ -17,10 +17,15 @@ module.exports= function (model) {
 		{
 			Object.keys(model.schema.reference)
 			.forEach(function (reference) {
-				if(tempObj.hasOwnProperty(reference))
+				if(tempObj.hasOwnProperty(reference) && Array.isArray(tempObj[reference]))
 				{
-					if(ObjectID.isValid(tempObj[reference]))
-						tempObj[reference]=new ObjectID(tempObj[reference]);
+					tempObj[reference]=tempObj[reference].map(queryHelper.toObjectId);
+					
+				}
+				else if(tempObj.hasOwnProperty(reference))
+				{
+					tempObj[reference]=queryHelper.toObjectId(tempObj[reference]);
+					
 				}
 			})
 		}
@@ -28,7 +33,7 @@ module.exports= function (model) {
 		if(tempObj && tempObj.hasOwnProperty('id') && !tempObj.hasOwnProperty('_id'))
 		{
 			var newObj=extend({},tempObj);
-			newObj._id=new ObjectID(tempObj.id);
+			newObj._id=queryHelper.toObjectId(tempObj.id);
 			delete newObj.id;
 			return newObj;
 		}

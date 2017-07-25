@@ -14,6 +14,26 @@ describe('Testing id2_id library',function () {
 		done();
 	});
 
+	it('Should return _id in place of id but should be a number if id is a number',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
+		var obj= id2_idFunc({id:2,password:0});
+		expect(obj).to.have.property('_id');
+		expect(obj._id).to.equal(2);
+		expect(obj).to.have.property('password',0);
+		done();
+	});
+
+	it('Should return _id in place of id but should be a string if id is a string',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
+		var obj= id2_idFunc({id:'2',password:0});
+		expect(obj).to.have.property('_id');
+		expect(obj._id).to.equal('2');
+		expect(obj).to.have.property('password',0);
+		done();
+	});
+
 	it('Should work with references too',function (done) {
 		var id2_id=require('../../app/db/mongodb/utils/id2_id');
 		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
@@ -31,6 +51,21 @@ describe('Testing id2_id library',function () {
 		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
 		var obj= id2_idFunc(null);
 		expect(obj).to.equal(null);
+		done();
+	});
+
+	it('Should work with array of references too',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
+		var obj= id2_idFunc({id:'507f1f77bcf86cd799439011',user:['507f1f77bcf86cd799439011','507f1f77bcf86cd799439012'],password:'507f1f77bcf86cd799439011'});
+		expect(obj).to.have.property('_id');
+		expect(obj._id.toHexString()).to.equal('507f1f77bcf86cd799439011');
+
+		expect(obj).to.have.property('user').to.have.length(2);
+		expect(obj.user[0].toHexString()).to.equal('507f1f77bcf86cd799439011');
+		expect(obj.user[1].toHexString()).to.equal('507f1f77bcf86cd799439012');
+
+		expect(obj).to.have.property('password','507f1f77bcf86cd799439011');
 		done();
 	});
 
