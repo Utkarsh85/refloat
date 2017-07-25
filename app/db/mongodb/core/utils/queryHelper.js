@@ -4,7 +4,7 @@ module.exports= {
 	_id: function (id) {
 		var queryObj={};
 		
-		if( ObjectID.isValid(id) )
+		if( ObjectID.isValid(id) && typeof(id)!='number')
 		{
 			queryObj._id= new ObjectID(id);
 			return queryObj;
@@ -15,11 +15,30 @@ module.exports= {
 		}
 		else if(typeof(id)==="object")
 		{
-			if(id.hasOwnProperty('_id') && ObjectID.isValid(id._id))
+			if(id.hasOwnProperty('_id') && ObjectID.isValid(id._id) && typeof(id._id)!='number')
 				id._id= new ObjectID(id._id);
 			// else if(id.hasOwnProperty('_id') && typeof(id._id)==="string")
 
 			return id;
 		}
+		else
+		{
+			queryObj._id=id;
+			return queryObj;
+		}
+	},
+
+	toObjectId: function (id) {
+		if( ObjectID.isValid(id) && typeof(id)!='number')
+			return new ObjectID(id);
+		else
+			return id;
+	},
+
+	toStringId: function (id) {
+		if( ObjectID.isValid(id) && typeof(id)!='number')
+			return new ObjectID(id).toHexString();
+		else
+			return id;
 	}
 }
