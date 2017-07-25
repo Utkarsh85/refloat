@@ -78,6 +78,28 @@ describe('Testing mongoapi.update',function () {
 		})
 	});
 
+	it('Should not be able to update the id',function (done) {
+		var update=require('../../app/db/mongodb/api/update');
+		var id;
+		getDb()
+		.then(function (db) {
+			return db.collection('user').insert({name:'hello'});
+		})
+		.then(function (res) {
+			id= res.ops[0]._id.toString();
+			var newmodel=update(input);
+			return newmodel.model.update(res.ops[0]._id,{id:2,name:'Hello'});
+		})
+		.then(function (user) {
+			expect(user).to.have.property('id').to.equal(id);
+			expect(user).to.not.have.property('_id');
+			done();
+		})
+		.catch(function (err) {
+			console.log(err);
+		})
+	});
+
 	it('Should update the reference by their ids',function (done) {
 		clearRequire.all();
 		var Api=require('../../app/db/mongodb')();

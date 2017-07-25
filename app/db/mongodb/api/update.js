@@ -13,6 +13,7 @@ module.exports= function (input) {
 	var model= input.model;
 	input.model.update= function (selector,obj) {
 		// obj= id2_id(model)(obj);
+		delete obj.id;
 		delete obj._id;
 
 		return validate(model.schema,obj)
