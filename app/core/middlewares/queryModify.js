@@ -1,5 +1,6 @@
 var models= require('../../models');
 var dotProp = require('dot-prop');
+var deepCleaner = require('deep-cleaner');
 
 module.exports= function () {
 	return function (req,res,next) {
@@ -14,38 +15,30 @@ module.exports= function () {
 				{
 					if(typeof(dotProp.get(safeObj,key))=="boolean" && dotProp.get(safeObj,key)==true)
 					{
-						dotProp.delete(req.query,key);
-						dotProp.delete(req.query,'where.'+key);
-						dotProp.delete(req.Params,key);
-						dotProp.delete(req.Params,'where.'+key);
+						deepCleaner(req.query,key);
+						deepCleaner(req.Params,key);
 					}
 
 					if(typeof(dotProp.get(safeObj,key))=="function" && dotProp.get(safeObj,key)(req,dotProp.get(req.query,key))==true)
 					{
-						dotProp.delete(req.query,key);
-						dotProp.delete(req.query,'where.'+key);
-						dotProp.delete(req.Params,key);
-						dotProp.delete(req.Params,'where.'+key);
+						deepCleaner(req.query,key);
+						deepCleaner(req.Params,key);
 					}
 
 					if(dotProp.get(req,'user.id'))
 					{
 						if(typeof(dotProp.get(safeObj,key))=="object" && dotProp.get(safeObj,key).hasOwnProperty(dotProp.get(req,'user.auth','authenticated')) && dotProp.get(safeObj,key)[dotProp.get(req,'user.auth','authenticated')]==true)
 						{
-							dotProp.delete(req.query,key);
-							dotProp.delete(req.query,'where.'+key);
-							dotProp.delete(req.Params,key);
-							dotProp.delete(req.Params,'where.'+key);
+							deepCleaner(req.query,key);
+							deepCleaner(req.Params,key);
 						}
 					}
 					else
 					{
 						if(typeof(dotProp.get(safeObj,key))=="object" && dotProp.get(safeObj,key).hasOwnProperty(dotProp.get(req,'user.auth','not_authenticated')) && dotProp.get(safeObj,key)[dotProp.get(req,'user.auth','not_authenticated')]==true)
 						{
-							dotProp.delete(req.query,key);
-							dotProp.delete(req.query,'where.'+key);
-							dotProp.delete(req.Params,key);
-							dotProp.delete(req.Params,'where.'+key);
+							deepCleaner(req.query,key);
+							deepCleaner(req.Params,key);
 						}
 					}
 				}
