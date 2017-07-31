@@ -41,12 +41,19 @@ module.exports=Object.keys(models)
 
 	var key= modelObj[model.modelName]['modelName'];
 
-	if(modelConfiguration.modelNameScheme=='lowercase')
-		modelObj[model.modelName]['modelName']=key.toLowerCase();
-	else if(modelConfiguration.modelNameScheme=='uppercase')
-		modelObj[model.modelName]['modelName']=key.toUpperCase();
-	else if(modelConfiguration.modelNameScheme=='capitalize')
-		modelObj[model.modelName]['modelName']=jsUcfirst(key);
+	if(modelObj[model.modelName].schema.hasOwnProperty('collectionName'))
+	{
+		modelObj[model.modelName]['modelName']=modelObj[model.modelName].schema['collectionName'];
+	}
+	else
+	{
+		if(modelConfiguration.modelNameScheme=='lowercase')
+			modelObj[model.modelName]['modelName']=key.toLowerCase();
+		else if(modelConfiguration.modelNameScheme=='uppercase')
+			modelObj[model.modelName]['modelName']=key.toUpperCase();
+		else if(modelConfiguration.modelNameScheme=='capitalize')
+			modelObj[model.modelName]['modelName']=jsUcfirst(key);
+	}
 
 	return modelObj;
 },{});

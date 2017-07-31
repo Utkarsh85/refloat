@@ -43,4 +43,14 @@ describe('Testing models library',function () {
 		expect(models.User).to.have.property('modelName','user');
 		done();
 	});
+
+	it('Should return models with different modelName if collectionName is defined',function (done) {
+
+		fs.writeFileSync(path.resolve('./api/models/User.js'),'module.exports={collectionName:\'hello\',attributes:{}}','utf8');
+		clearRequire.all();
+		models= require('../../app/models');
+		expect(models).to.have.property('User');
+		expect(models.User).to.have.property('modelName','hello');
+		done();
+	});
 })

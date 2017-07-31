@@ -18,6 +18,7 @@ describe('Testing mongoapi.populate',function () {
 		fs.unlinkSync(path.resolve('./api/models/User.js'));
 		fs.unlinkSync(path.resolve('./api/models/Pet.js'));
 		fs.unlinkSync(path.resolve('./api/models/Belt.js'));
+		fs.unlinkSync(path.resolve('./api/models/Bag.js'));
 		done();
 	});
 
