@@ -84,9 +84,7 @@ describe('Testing mongoapi.populate',function () {
 			Api.Bag.create({name:'My Silver Bag'})
 		])
 		.then(function (res) {
-			return Api.User.create(
-				{name:'Adam',bag:res.map(x=>x.id)},
-			);
+			return Api.User.create({name:'Adam',bag:res.map(x=>x.id)});
 		})
 		.then(function (user) {
 			return Api.User.populate(user,['bag'],{toJSON:true});
