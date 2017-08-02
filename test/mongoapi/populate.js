@@ -185,9 +185,7 @@ describe('Testing mongoapi.populate',function () {
 			Api.Pet.create({title:'Dog',species:'Doge'}),
 		])
 		.then(function (res) {
-			return Api.User.create(
-				{name:'Adam',pet:res[0].id},
-			);
+			return Api.User.create({name:'Adam',pet:res[0].id});
 		})
 		.then(function (users) {
 			return Api.User.populate(users,null,{toJSON:true});
