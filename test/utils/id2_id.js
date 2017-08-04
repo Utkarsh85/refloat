@@ -34,6 +34,16 @@ describe('Testing id2_id library',function () {
 		done();
 	});
 
+	it('Should return _id in place of id even if _id does exist in the input object',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
+		var obj= id2_idFunc({id:'507f1f77bcf86cd799439011',password:0,_id:'hello'});
+		expect(obj).to.have.property('_id');
+		expect(obj._id.toHexString()).to.equal('507f1f77bcf86cd799439011');
+		expect(obj).to.have.property('password',0);
+		done();
+	});
+
 	it('Should work with references too',function (done) {
 		var id2_id=require('../../app/db/mongodb/utils/id2_id');
 		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});

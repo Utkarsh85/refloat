@@ -30,7 +30,7 @@ module.exports= function (model) {
 			})
 		}
 
-		if(tempObj && tempObj.hasOwnProperty('id') && !tempObj.hasOwnProperty('_id'))
+		if(tempObj && tempObj.hasOwnProperty('id'))
 		{
 			var newObj=extend({},tempObj);
 			newObj._id=queryHelper.toObjectId(tempObj.id);
