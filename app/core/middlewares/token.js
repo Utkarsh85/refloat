@@ -12,7 +12,7 @@ module.exports=function () {
 			var bearerToken=req.headers['authorization'].split('Bearer ')[1];
 
 			if(!token.verify(bearerToken))
-				return res.status(401).json({msg:"Malformed token supplied",status:4300});
+				return res.status(401).json({msg:"Malformed token supplied",code:4300,status:401});
 
 		    var decoded= token.payload(bearerToken);
 
@@ -28,7 +28,7 @@ module.exports=function () {
 				return next();
 		    }
 		    else
-		    	return res.status(401).json({msg:"Unauthorized Access",status:4301});
+		    	return res.status(401).json({msg:"Unauthorized Access",code:4301,status:401});
 		}
 
 		//No authorization header
@@ -43,7 +43,7 @@ module.exports=function () {
 		    	return next();
 		    }
 		    else
-		    	return res.status(401).json({msg:"Unauthorized Access",status:4302});
+		    	return res.status(401).json({msg:"Unauthorized Access",code:4302,status:401});
 		}
 
 	}
