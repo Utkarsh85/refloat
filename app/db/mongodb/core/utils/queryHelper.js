@@ -1,9 +1,8 @@
 var ObjectID = require('mongodb').ObjectID;
 
-module.exports= {
+var queryHelper= {
 	_id: function (id) {
 		var queryObj={};
-		
 		if( ObjectID.isValid(id) && typeof(id)!='number')
 		{
 			queryObj._id= new ObjectID(id);
@@ -40,5 +39,14 @@ module.exports= {
 			return new ObjectID(id).toHexString();
 		else
 			return id;
+	},
+
+	checkObjectId: function (id) {
+		if( ObjectID.isValid(id) && typeof(id)!='number')
+			return true;
+		else
+			return false;
 	}
-}
+};
+
+module.exports= queryHelper;

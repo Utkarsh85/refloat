@@ -91,4 +91,37 @@ describe('Testing id2_id library',function () {
 		expect(obj[1]).to.have.property('password',0);
 		done();
 	});
+
+	it('Should return _id in place of id for $in for id',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
+		var obj= id2_idFunc({id:{$in:['507f1f77bcf86cd799439011','507f1f77bcf86cd799439012']},password:0});
+		expect(obj).to.have.property('_id').to.have.property('$in').to.have.length(2);
+		expect(obj['_id']['$in'][0].toHexString()).to.equal('507f1f77bcf86cd799439011');
+		expect(obj['_id']['$in'][1].toHexString()).to.equal('507f1f77bcf86cd799439012');
+		expect(obj).to.have.property('password',0);
+		done();
+	});
+
+	it('Should return ObjectId for $in for reference',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
+		var obj= id2_idFunc({user:{$in:['507f1f77bcf86cd799439011','507f1f77bcf86cd799439012']},password:0});
+		expect(obj).to.have.property('user').to.have.property('$in').to.have.length(2);
+		expect(obj['user']['$in'][0].toHexString()).to.equal('507f1f77bcf86cd799439011');
+		expect(obj['user']['$in'][1].toHexString()).to.equal('507f1f77bcf86cd799439012');
+		expect(obj).to.have.property('password',0);
+		done();
+	});
+
+	it('Should not return ObjectId for anything else',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
+		var obj= id2_idFunc({username:{$in:['507f1f77bcf86cd799439011','507f1f77bcf86cd799439012']},password:0});
+		expect(obj).to.have.property('username').to.have.property('$in').to.have.length(2);
+		expect(obj['username']['$in'][0]).to.equal('507f1f77bcf86cd799439011');
+		expect(obj['username']['$in'][1]).to.equal('507f1f77bcf86cd799439012');
+		expect(obj).to.have.property('password',0);
+		done();
+	});
 });

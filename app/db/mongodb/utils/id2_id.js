@@ -1,39 +1,61 @@
 var extend= require('util')._extend;
 var queryHelper= require('../core/utils/queryHelper');
 var ObjectID = require('mongodb').ObjectID;
+var parser = require('mongo-parse');
 
 module.exports= function (model) {
 	var processFunc= function (obj) {
-		if(ObjectID.isValid(obj))  // if obj turns out to be an ObjectId or a string of type ObjectId
+		if(queryHelper.checkObjectId(obj))  // if obj turns out to be an ObjectId or a string of type ObjectId
+		{
 			obj=queryHelper._id(obj);
+			return obj;
+		}
 
 		var tempObj;
 		if(obj)
 			tempObj= extend({},obj);
 		else
-			tempObj=null;
+			return null;
 
-		if(tempObj && model.schema.hasOwnProperty('reference') && typeof(model.schema.reference)==="object")
-		{
-			Object.keys(model.schema.reference)
-			.forEach(function (reference) {
-				if(tempObj.hasOwnProperty(reference) && Array.isArray(tempObj[reference]))
+		var references=(tempObj && model.schema.hasOwnProperty('reference') && typeof(model.schema.reference)==="object") ? Object.keys(model.schema.reference) : [];
+		references= references.length ? references.concat('id') : ['id'];
+
+		var tempObj = parser.parse(tempObj).mapValues(function(field, stringId){
+			if(references.indexOf(field)>=0)
+			{
+				if(typeof(stringId)=="string" && ObjectID.isValid(stringId) && typeof(stringId)!='number' )
 				{
-					tempObj[reference]=tempObj[reference].map(queryHelper.toObjectId);
-					
+					return ObjectID(stringId.toString());
 				}
-				else if(tempObj.hasOwnProperty(reference))
-				{
-					tempObj[reference]=queryHelper.toObjectId(tempObj[reference]);
+				else
+					return stringId;
+			}
+			else
+				return stringId;
+		});
+
+		// console.log(tempObj);
+
+		// if(tempObj && model.schema.hasOwnProperty('reference') && typeof(model.schema.reference)==="object")
+		// {
+		// 	// .forEach(function (reference) {
+		// 	// 	if(tempObj.hasOwnProperty(reference) && Array.isArray(tempObj[reference]))
+		// 	// 	{
+		// 	// 		tempObj[reference]=tempObj[reference].map(queryHelper._id);
 					
-				}
-			})
-		}
+		// 	// 	}
+		// 	// 	else if(tempObj.hasOwnProperty(reference))
+		// 	// 	{
+		// 	// 		tempObj[reference]=queryHelper._id(tempObj[reference]);
+					
+		// 	// 	}
+		// 	// })
+		// }
 
 		if(tempObj && tempObj.hasOwnProperty('id'))
 		{
 			var newObj=extend({},tempObj);
-			newObj._id=queryHelper.toObjectId(tempObj.id);
+			newObj._id=tempObj.id;
 			delete newObj.id;
 			return newObj;
 		}

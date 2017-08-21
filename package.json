@@ -35,6 +35,7 @@
     "express": "^4.15.3",
     "jsonwebtoken": "^7.4.1",
     "lodash": "^4.17.4",
+    "mongo-parse": "^2.0.3",
     "mongodb": "^2.2.27",
     "object-traverse-clean": "^1.0.3",
     "path-to-regexp": "^1.7.0",
