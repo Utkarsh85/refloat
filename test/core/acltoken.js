@@ -44,7 +44,7 @@ describe('Testing core.acltoken',function () {
 
 			var res=token()(ctx,responseInst,next);
 			expect(res.value()).to.have.property('status',401);
-			expect(res.value()).to.have.property('json').to.have.property('status',4302);
+			expect(res.value()).to.have.property('json').to.have.property('code',4302);
 			expect(res.value()).to.have.property('json').to.have.property('msg','Unauthorized Access');
 			done();
 		},function (ctx,next) {
@@ -67,7 +67,7 @@ describe('Testing core.acltoken',function () {
 
 			var res=token()(ctx,responseInst,next);
 			expect(res.value()).to.have.property('status',401);
-			expect(res.value()).to.have.property('json').to.have.property('status',4302);
+			expect(res.value()).to.have.property('json').to.have.property('code',4302);
 			expect(res.value()).to.have.property('json').to.have.property('msg','Unauthorized Access');
 			done();
 		},function (ctx,next) {
@@ -109,7 +109,7 @@ describe('Testing core.acltoken',function () {
 
 			var res=token()(ctx,responseInst,next);
 			expect(res.value()).to.have.property('status',401);
-			expect(res.value()).to.have.property('json').to.have.property('status',4300);
+			expect(res.value()).to.have.property('json').to.have.property('code',4300);
 			expect(res.value()).to.have.property('json').to.have.property('msg','Malformed token supplied');
 			done();
 		},function (ctx,next) {
@@ -133,7 +133,7 @@ describe('Testing core.acltoken',function () {
 
 			var res=token()(ctx,responseInst,next);
 			expect(res.value()).to.have.property('status',401);
-			expect(res.value()).to.have.property('json').to.have.property('status',4301);
+			expect(res.value()).to.have.property('json').to.have.property('code',4301);
 			expect(res.value()).to.have.property('json').to.have.property('msg','Unauthorized Access');
 			done();
 		},function (ctx,next) {

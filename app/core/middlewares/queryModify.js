@@ -4,7 +4,7 @@ var deepCleaner = require('deep-cleaner');
 
 module.exports= function () {
 	return function (req,res,next) {
-		if(req.options.action === "find")	
+		if(req.options.action === "find")
 		{
 			if(models[req.options.controller].schema.hasOwnProperty('queryModify'))
 			{
