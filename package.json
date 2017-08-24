@@ -39,7 +39,8 @@
     "mongodb": "^2.2.27",
     "object-traverse-clean": "^1.0.3",
     "path-to-regexp": "^1.7.0",
-    "require-all": "^2.2.0"
+    "require-all": "^2.2.0",
+    "uuid": "^3.1.0"
   },
   "directories": {
     "test": "test"

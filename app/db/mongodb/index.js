@@ -50,6 +50,10 @@ module.exports = function () {
 		return getDb();
 	};
 
+	modelApi.feeder= function () {
+		return api.feeder;
+	};
+
 	modelApi.ObjectID= ObjectID;
 
 	return modelApi;
