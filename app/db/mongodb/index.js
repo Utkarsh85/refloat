@@ -9,9 +9,9 @@ var api= require('require-all')({
   recursive   : true
 });
 
-var models= require('../../models');
-
 module.exports = function () {
+
+	var models= require('../../models');
 
 	var modelApi= Object.keys(models)
 	.map(function (key) {
