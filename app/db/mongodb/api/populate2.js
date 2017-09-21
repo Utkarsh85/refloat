@@ -5,9 +5,9 @@ var projectionUtil= require('../utils/projectUtil');
 var _id2id= require('../utils/_id2id');
 var queryHelper= require('../core/utils/queryHelper');
 var getDb= require('../getDb');
-var allModels= require('../../../models');
 
 module.exports= function (input) {
+	var allModels= require('../../../models');
 	var model= input.model;
 	if(input.model.schema.hasOwnProperty('reference'))
 		input.model.populate= function (obj,fields,options) {
