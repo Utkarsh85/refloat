@@ -16,6 +16,11 @@ var getfile= function (model,id) {
 	.then(obj=>_id2id(obj));
 };
 
+var putFileOne= function (model,id,singleData) {
+	return getDb()
+	.then(db=>db.collection(model).update({_id:id},{$push:{data:{$each:[singleData],$position:0}}},{upsert:true}))
+}
+
 var putfile= function (model,id,fileData) {
 
 	return getDb()
@@ -68,7 +73,7 @@ feeder.prototype.put = function(data) {
 		}
 		else
 		{
-			return putfile(self.__model,self.__id,fileData);
+			return putFileOne(self.__model,self.__id,data);
 		}
 	});
 
@@ -90,7 +95,6 @@ feeder.prototype.getMore = function(limiting) {
 	limiting= limiting || 0.75;
 
 	this.__promise=this.__promise.then(function (fileData) {
-		// console.log(fileData.data.length);
 		if(fileData && fileData.hasOwnProperty('next') && fileData.data.length <=limiting*self.__limit)
 			return Promise.all([fileData, getfile(self.__model,self.__id+'_'+fileData.next)]);
 		else
