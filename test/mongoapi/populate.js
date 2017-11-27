@@ -48,14 +48,15 @@ describe('Testing mongoapi.populate',function () {
 		.then(function (res) {
 			return Api.User.create([
 				{name:'Adam',pet:res[0].id,belt:res[1].id},
-				{name:'Adam',pet:res[0].id,belt:res[2].id}
+				{name:'Adam',pet:res[0].id,belt:res[2].id},
+				{name:'Adam',pet:Api.generateId().toString(),belt:Api.generateId().toString()},
 			]);
 		})
 		.then(function (users) {
 			return Api.User.populate(users);
 		})
 		.then(function (users) {
-			expect(users).to.have.length(2);
+			expect(users).to.have.length(3);
 			expect(users[0]).to.have.property('pet');
 			expect(users[0].pet).to.have.property('title','Dog');
 			expect(users[0]).to.have.property('belt');
@@ -67,6 +68,8 @@ describe('Testing mongoapi.populate',function () {
 			expect(users[1]).to.have.property('belt');
 			expect(users[1].belt).to.have.property('type','Rexine');
 
+			expect(users[2]).to.have.property('pet').to.equal(null);
+			expect(users[2]).to.have.property('belt').to.equal(null);
 			done();
 		})
 		.catch(function (err) {

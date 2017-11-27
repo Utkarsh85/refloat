@@ -58,7 +58,7 @@ module.exports= function (input) {
 				.forEach(function (refName) {
 					obj.forEach(function (objVal) {
 						// console.log(objVal,refName);
-						if(objVal.hasOwnProperty(refName))
+						if(objVal && objVal.hasOwnProperty(refName))
 						{
 							if(model.schema.reference[refName].hasOwnProperty('multi') && model.schema.reference[refName].multi==true)
 							{
@@ -69,7 +69,7 @@ module.exports= function (input) {
 								objVal[refName]=objVal[refName].map(function (id) {
 									if(resolvedList[refName].hasOwnProperty(id))
 									{
-											return resolvedList[refName][id];
+										return resolvedList[refName][id];
 									}
 									else
 									{
@@ -122,7 +122,7 @@ var getModelReferences= function (model,obj,fields,allModels) {
 			})
 			.map(function (modelReference) {
 				var ids=obj.map(function (objVal) {
-					if(objVal.hasOwnProperty(modelReference))
+					if(objVal && objVal.hasOwnProperty(modelReference))
 					{
 						if(model.schema.reference[modelReference].hasOwnProperty('multi') && model.schema.reference[modelReference].multi==true)
 						{
