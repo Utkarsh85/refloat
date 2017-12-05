@@ -2,7 +2,10 @@ var fs= require('fs');
 var mkdirp = require('mkdirp');
 var path= require('path');
 var clearRequire = require('clear-require');
-var expect= require('chai').expect;
+var chai= require('chai');
+var asserttype = require('chai-asserttype');
+chai.use(asserttype);
+var expect= chai.expect;
 
 describe('Testing validation library',function () {
 
@@ -79,7 +82,7 @@ describe('Testing validation library',function () {
 
 	it('Should not consider references as other than strings',function (done) {
 		var validation=require('../../app/validation');
-		var schema={reference:{user:{mode:'User'}},attributes:{properties:{name:{type:'string'}}}};
+		var schema={reference:{user:{model:'User'}},attributes:{properties:{name:{type:'string'}}}};
 		var instance={user:6552524};
 
 		validation(schema,instance)
@@ -109,4 +112,42 @@ describe('Testing validation library',function () {
 		})
 	});
 
+	it('Should now convert format date-time and instanceof Date as Date object when convertToObject is true',function (done) {
+		var validation=require('../../app/validation');
+		var schema={attributes:{properties:{dateField1:{type:'string',format:'date-time',convertToObject:true},dateField2:{instanceof:'Date',convertToObject:true}}}};
+		var instance={dateField1:new Date().toISOString(),dateField2:new Date().toISOString()};
+
+		validation(schema,instance)
+		.then(function (instance) {
+			expect(instance.dateField1).to.be.date();
+			expect(instance.dateField2).to.be.date();
+			done();
+		})
+		.catch(function (err) {
+			console.log(err);
+		})
+	});
+
+
+	it('Should not put default fields if removeDefaults is true',function (done) {
+		fs.writeFileSync(path.resolve('./config/validation.js'),'module.exports={rules:{useDefaults:true}}','utf8');
+		clearRequire.all();
+		var validation=require('../../app/validation');
+		var schema={attributes:{properties:{age:{type:'string',default:'14'},name:{type:'string'}}}};
+		var instance1={name:'Boss'};
+		var instance2={name:'Boss'};
+
+		Promise.all([
+			validation(schema,instance1),
+			validation(schema,instance2,true)
+		])
+		.then(function ([instance1,instance2]) {
+			expect(instance1).to.have.property('age','14');
+			expect(instance2).to.not.have.property('age');
+			done();
+		})
+		.catch(function (err) {
+			console.log(err);
+		})
+	});
 })

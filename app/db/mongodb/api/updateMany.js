@@ -15,7 +15,7 @@ module.exports= function (input) {
 		// obj= id2_id(model)(obj);
 		delete obj._id;
 
-		return validate(model.schema,obj)
+		return validate(model.schema,obj,true)
 		.then(id2_id(model))
 		.then(autoUpdatedAt(model))
 		.then(function (obj) {

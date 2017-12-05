@@ -1,5 +1,8 @@
 var clearRequire = require('clear-require');
-var expect= require('chai').expect;
+var chai= require('chai');
+var asserttype = require('chai-asserttype');
+chai.use(asserttype);
+var expect= chai.expect;
 var ObjectID = require('mongodb').ObjectID;
 
 describe('Testing id2_id library',function () {
@@ -122,6 +125,15 @@ describe('Testing id2_id library',function () {
 		expect(obj['username']['$in'][0]).to.equal('507f1f77bcf86cd799439011');
 		expect(obj['username']['$in'][1]).to.equal('507f1f77bcf86cd799439012');
 		expect(obj).to.have.property('password',0);
+		done();
+	});
+
+	it('Should resolve first child level format date-time and instanceof Date fields to Date Object',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{attributes:{properties:{dateField1:{type:'string',format:'date-time',convertToObject:true},dateField2:{instanceof:'Date',convertToObject:true}}}}});
+		var obj= id2_idFunc({dateField1:new Date().toISOString(),dateField2:new Date().toISOString()});
+		expect(obj.dateField1).to.be.date();
+		expect(obj.dateField2).to.be.date();
 		done();
 	});
 });

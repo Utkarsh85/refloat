@@ -30,6 +30,10 @@ module.exports= function (model) {
 				else
 					return stringId;
 			}
+			else if(model.schema.hasOwnProperty('attributes') && model.schema.attributes.hasOwnProperty('properties') && model.schema.attributes.properties.hasOwnProperty(field) && (((model.schema.attributes.properties[field].hasOwnProperty('format') && model.schema.attributes.properties[field].format=='date-time')) || ((model.schema.attributes.properties[field].hasOwnProperty('instanceof') && model.schema.attributes.properties[field].instanceof=='Date'))))
+			{
+				return new Date(stringId);
+			}
 			else
 				return stringId;
 		});

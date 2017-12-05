@@ -1,4 +1,5 @@
 var ObjectId= require('mongodb').ObjectId;
+var omitDeep = require('omit-deep');
 
 var addAdditionalSchema = require('./additionalSchema');
 var validationConfig={};
@@ -22,7 +23,29 @@ ajv.addFormat('ObjectId', function (id) {
 		return false;
 }, ['string']);
 
-module.exports= function (schema,instance) {
+ajv.addKeyword('convertToObject',{
+	type: 'string',
+	compile: function(sch,parentSchema) {
+		// console.log(sch,parentSchema);
+		return (parentSchema.format === 'date-time' || parentSchema.instanceof === 'Date') && sch ? function(value,objectKey,object,key) {
+
+			// Update date-time string to Date object
+			object[key] = new Date(value);
+			return true;
+		} : function() {
+			return true;
+		}
+	}
+})
+
+module.exports= function (schema,instance,removeDefaults) {
+
+
+	//removeDefaults if removeDefaults= true
+	if(removeDefaults === true)
+	{
+		schema.attributes= omitDeep(schema.attributes,['default']);
+	}
 
 	//make measure for the references
 	if(schema.hasOwnProperty('reference'))
@@ -42,7 +65,7 @@ module.exports= function (schema,instance) {
 			return new Promise(function (resolve,reject) {
 
 				var isValid = ajv.validate(schema.attributes, singleInstance);
-
+				
 				if(isValid)
 				{
 					resolve(singleInstance);
@@ -58,7 +81,7 @@ module.exports= function (schema,instance) {
 	else
 	{
 		return new Promise(function (resolve,reject) {
-					
+				
 			var isValid = ajv.validate(schema.attributes, instance);
 
 			if(isValid)
