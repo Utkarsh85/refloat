@@ -13,6 +13,10 @@ catch(err)
 }
 
 var Ajv = require('ajv');
+
+if(!validationConfig.rules)
+	validationConfig.rules={};
+
 var ajv = new Ajv(validationConfig.rules);
 ajv=addAdditionalSchema(ajv,validationConfig); //add additional schema keywords and formats
 
@@ -42,7 +46,7 @@ module.exports= function (schema,instance,removeDefaults) {
 
 
 	//removeDefaults if removeDefaults= true
-	if(removeDefaults === true)
+	if(validationConfig.rules.hasOwnProperty('useDefaults') && validationConfig.rules.useDefaults==true && removeDefaults === true)
 	{
 		schema.attributes= omitDeep(schema.attributes,['default']);
 	}
