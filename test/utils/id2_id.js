@@ -128,9 +128,9 @@ describe('Testing id2_id library',function () {
 		done();
 	});
 
-	it('Should resolve first child level format date-time and instanceof Date fields to Date Object',function (done) {
+	it('Should resolve format date-time and instanceof Date fields to Date Object',function (done) {
 		var id2_id=require('../../app/db/mongodb/utils/id2_id');
-		var id2_idFunc=id2_id({schema:{attributes:{properties:{dateField1:{type:'string',format:'date-time',convertToObject:true},dateField2:{instanceof:'Date',convertToObject:true}}}}});
+		var id2_idFunc=id2_id({schema:{attributes:{properties:{dateField1:{type:'string',format:'date-time',convertToObject:true},dateField2:{instanceof:'Date',convertToObject:true}}}},dateFields:{dateField1:true,dateField2:true}});
 		var obj= id2_idFunc({dateField1:new Date().toISOString(),dateField2:new Date().toISOString()});
 		expect(obj.dateField1).to.be.date();
 		expect(obj.dateField2).to.be.date();

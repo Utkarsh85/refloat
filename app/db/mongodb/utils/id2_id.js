@@ -2,6 +2,7 @@ var extend= require('util')._extend;
 var queryHelper= require('../core/utils/queryHelper');
 var ObjectID = require('mongodb').ObjectID;
 var parser = require('mongo-parse');
+var ajv= require('ajv')();
 
 module.exports= function (model) {
 	var processFunc= function (obj) {
@@ -30,9 +31,12 @@ module.exports= function (model) {
 				else
 					return stringId;
 			}
-			else if(model.schema.hasOwnProperty('attributes') && model.schema.attributes.hasOwnProperty('properties') && model.schema.attributes.properties.hasOwnProperty(field) && (((model.schema.attributes.properties[field].hasOwnProperty('format') && model.schema.attributes.properties[field].format=='date-time')) || ((model.schema.attributes.properties[field].hasOwnProperty('instanceof') && model.schema.attributes.properties[field].instanceof=='Date'))))
+			else if(model.hasOwnProperty('dateFields') && model.dateFields.hasOwnProperty(field))//if(ajv.validate({properties:{dateField:{type:'string',format:'date-time'}}}),{dateField:stringId})//if(model.schema.hasOwnProperty('attributes') && model.schema.attributes.hasOwnProperty('properties') && model.schema.attributes.properties.hasOwnProperty(field) && (((model.schema.attributes.properties[field].hasOwnProperty('format') && model.schema.attributes.properties[field].format=='date-time')) || ((model.schema.attributes.properties[field].hasOwnProperty('instanceof') && model.schema.attributes.properties[field].instanceof=='Date'))))
 			{
-				return new Date(stringId);
+				if(!isNaN(Date.parse(stringId)))
+					return new Date(stringId);
+				else
+					return stringId;
 			}
 			else
 				return stringId;

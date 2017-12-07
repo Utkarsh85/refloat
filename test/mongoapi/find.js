@@ -9,7 +9,7 @@ var input={model:{filename:'User',modelName:'user',schema:{attributes:{propertie
 describe('Testing mongoapi.find',function () {
 
 	before(function (done) {
-		fs.writeFileSync(path.resolve('./api/models/User.js'),'module.exports={attributes:{properties:{name:{type:\'string\'}}},reference:{pet:{model:\'Pet\'},belt:{model:\'Belt\'}}}','utf8');	
+		fs.writeFileSync(path.resolve('./api/models/User.js'),'module.exports={attributes:{properties:{name:{type:\'string\'},dateField1:{type:"string",format:"date-time"},dateField2:{instanceof:"Date"}}},reference:{pet:{model:\'Pet\'},belt:{model:\'Belt\'}}}','utf8');	
 		fs.writeFileSync(path.resolve('./api/models/Pet.js'),'module.exports={attributes:{properties:{title:{type:\'string\'}}}}','utf8');	
 		fs.writeFileSync(path.resolve('./api/models/Belt.js'),'module.exports={attributes:{properties:{type:{type:\'string\'}}}}','utf8');	
 		done();
@@ -258,4 +258,45 @@ describe('Testing mongoapi.find',function () {
 			console.log(err);
 		});
 	});
+
+	it('Should find dateFields if queried with string dates',function (done) {
+		clearRequire.all();
+		var Api=require('../../app/db/mongodb')();
+
+		getDb()
+		.then(function (db) {
+			return db.collection('user').insert({dateField1:new Date(),dateField2:new Date()})
+		})
+		.then(function () {
+			return Promise.all([
+				Api.User.find({dateField1:{$gt:new Date().toISOString()}}).toArray(),
+				Api.User.find({dateField1:{$lt:new Date().toISOString()}}).toArray(),
+				Api.User.find({dateField1:{$gt:new Date(new Date().getTime() - 50000).toISOString()}}).toArray(),
+				Api.User.find({dateField1:{$lt:new Date(new Date().getTime() - 50000).toISOString()}}).toArray(),
+
+				Api.User.find({dateField2:{$gt:new Date().toISOString()}}).toArray(),
+				Api.User.find({dateField2:{$lt:new Date().toISOString()}}).toArray(),
+				Api.User.find({dateField2:{$gt:new Date(new Date().getTime() - 50000).toISOString()}}).toArray(),
+				Api.User.find({dateField2:{$lt:new Date(new Date().getTime() - 50000).toISOString()}}).toArray(),
+			])
+		})
+		.then(function (users) {
+			expect(users).to.have.length(8);
+			expect(users[0]).to.have.length(0);
+			expect(users[1]).to.have.length(1);
+			expect(users[2]).to.have.length(1);
+			expect(users[3]).to.have.length(0);
+
+			expect(users[4]).to.have.length(0);
+			expect(users[5]).to.have.length(1);
+			expect(users[6]).to.have.length(1);
+			expect(users[7]).to.have.length(0);
+
+			done();
+		})
+		.catch(function (err) {
+			console.log(err);
+		})
+	});
+
 })

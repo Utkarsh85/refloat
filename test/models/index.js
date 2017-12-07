@@ -53,4 +53,18 @@ describe('Testing models library',function () {
 		expect(models.User).to.have.property('modelName','hello');
 		done();
 	});
+
+	it('Should return dateFields if defined',function (done) {
+
+		fs.writeFileSync(path.resolve('./api/models/User.js'),'module.exports={attributes:{dateField1:{type:\'string\',format:\'date-time\'},dateField2:{instanceof:\'Date\'}}}','utf8');
+		clearRequire.all();
+		models= require('../../app/models');
+		expect(models).to.have.property('User');
+		expect(models.User).to.have.property('dateFields');
+		expect(models.User.dateFields).to.have.property('dateField1');
+		expect(models.User.dateFields).to.have.property('dateField2');
+		expect(models.User.dateFields).to.have.property('createdAt');
+		expect(models.User.dateFields).to.have.property('updatedAt');
+		done();
+	});
 })

@@ -1,5 +1,6 @@
 var models={};
 var modelConfiguration={modelNameScheme:'lowercase'};
+var dateFieldSearch= require('./dateFieldSearch');
 
 try
 {
@@ -32,6 +33,7 @@ var jsUcfirst=function (string)
 module.exports=Object.keys(models)
 .map(function (key) {
 	var obj={schema: models[key]};
+	obj.dateFields= Object.assign({},dateFieldSearch(models[key]),{createdAt:true,updatedAt:true});
 	obj.modelName=key;
 	obj.fileName=key;
 	return obj;
