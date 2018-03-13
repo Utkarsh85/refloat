@@ -213,7 +213,7 @@ describe('Testing mongoapi.populate',function () {
 		});
 	});
 
-	it.only('Checking multi similar document in single populate',function (done) {
+	it('Checking multi similar document in single populate',function (done) {
 		clearRequire.all();
 		var Api=require('../../app/db/mongodb')();
 
