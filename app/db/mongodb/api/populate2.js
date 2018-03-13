@@ -54,10 +54,14 @@ module.exports= function (input) {
 			})
 			.then(function (resolvedList) {
 				// console.log(resolvedList);
+				if(Array.isArray(obj))
+					obj= obj.map(x=>Object.assign({},x));
+
 				Object.keys(resolvedList)
 				.forEach(function (refName) {
 					obj.forEach(function (objVal) {
 						// console.log(objVal,refName);
+
 						if(objVal && objVal.hasOwnProperty(refName))
 						{
 							if(model.schema.reference[refName].hasOwnProperty('multi') && model.schema.reference[refName].multi==true)

@@ -11,6 +11,11 @@ describe('Testing mongoapi.populate',function () {
 		fs.writeFileSync(path.resolve('./api/models/Pet.js'),'module.exports={attributes:{properties:{title:{type:\'string\'},species:{type:\'string\'}}},toJSON:function(val){delete val.species; return val;}}','utf8');	
 		fs.writeFileSync(path.resolve('./api/models/Belt.js'),'module.exports={attributes:{properties:{type:{type:\'string\'}}}}','utf8');	
 		fs.writeFileSync(path.resolve('./api/models/Bag.js'),'module.exports={attributes:{properties:{name:{type:\'string\'}}},toJSON:x=>{delete x.createdAt; delete x.updatedAt; return x;}}','utf8');	
+		
+		fs.writeFileSync(path.resolve('./api/models/Relation.js'),'module.exports={attributes:{properties:{name:{type:\'string\'}}},reference:{human:{model:\'Human\'}}}','utf8');	
+		fs.writeFileSync(path.resolve('./api/models/Human.js'),'module.exports={attributes:{properties:{name:{type:\'string\'}}},reference:{animal:{model:\'Animal\'}}}','utf8');	
+		fs.writeFileSync(path.resolve('./api/models/Animal.js'),'module.exports={attributes:{properties:{name:{type:\'string\'}}}}','utf8');	
+		
 		done();
 	});
 
@@ -19,6 +24,9 @@ describe('Testing mongoapi.populate',function () {
 		fs.unlinkSync(path.resolve('./api/models/Pet.js'));
 		fs.unlinkSync(path.resolve('./api/models/Belt.js'));
 		fs.unlinkSync(path.resolve('./api/models/Bag.js'));
+		fs.unlinkSync(path.resolve('./api/models/Relation.js'));
+		fs.unlinkSync(path.resolve('./api/models/Human.js'));
+		fs.unlinkSync(path.resolve('./api/models/Animal.js'));
 		done();
 	});
 
@@ -204,4 +212,43 @@ describe('Testing mongoapi.populate',function () {
 			console.log(err);
 		});
 	});
+
+	it.only('Checking multi similar document in single populate',function (done) {
+		clearRequire.all();
+		var Api=require('../../app/db/mongodb')();
+
+		Promise.all([
+			Api.Animal.create({name:'Cat'}),
+		])
+		.then(function (res) {
+			return Api.Human.create({name:'Shri',animal:res[0].id});
+		})
+		.then(function (human) {
+			return Promise.all([
+				Api.Relation.create({name:'Relation 1',human:human.id}),
+				Api.Relation.create({name:'Relation 2',human:human.id})
+			]);
+		})
+		.then(function (relations) {
+			return Api.Relation.populate(relations,null,{toJSON:true});
+		})
+		.then(function (relations) {
+			return Api.Human.populate(relations.map(x=>x.human));
+		})
+		.then(function (humans) {
+			expect(humans).to.have.length(2);
+			expect(humans[0]).to.have.property('animal');
+			expect(humans[1]).to.have.property('animal');
+			
+			expect(humans[0].animal).to.have.property('id').to.be.equal(humans[1].animal.id);
+			
+			expect(humans[0].animal).to.have.property('name','Cat');
+			expect(humans[1].animal).to.have.property('name','Cat');
+			
+			done();
+		})
+		.catch(function (err) {
+			console.log(err);
+		});
+	})
 })
