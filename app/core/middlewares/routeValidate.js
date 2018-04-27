@@ -1,7 +1,25 @@
 var Ajv = require('ajv');
 var ObjectId= require('mongodb').ObjectId;
+var addAdditionalSchema = require('../../validation/additionalSchema');
 
-var v = new Ajv();
+var validationConfig={};
+try
+{
+	validationConfig= require(require('path').resolve('./config/validation'));
+}
+catch(err)
+{
+
+}
+
+if(!validationConfig.rules)
+	validationConfig.rules={};
+
+validationConfig.rules.useDefaults= false; //Don't useDefaults
+
+var v = new Ajv(validationConfig.rules);
+v=addAdditionalSchema(v,validationConfig);
+
 v.addFormat('ObjectId', function (id) {
 	if(ObjectId.isValid(id))
 		return true
