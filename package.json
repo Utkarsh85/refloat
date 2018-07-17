@@ -39,7 +39,7 @@
     "lodash": "^4.17.4",
     "mongo-parse": "^2.0.3",
     "mongodb": "^2.2.27",
-    "object-traverse-clean": "^1.0.5",
+    "object-traverse-clean": "^1.0.6",
     "omit-deep": "^0.3.0",
     "path-to-regexp": "^1.7.0",
     "require-all": "^2.2.0",
