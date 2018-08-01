@@ -1,27 +1,34 @@
 var express= require('express');
+var app;
 
-var middlewares= require('require-all')({
-  dirname     :  __dirname+'/middlewares',
-  excludeDirs :  /^\.(git|svn)$/,
-  recursive   : true
-});
+module.exports= function (predefinedApp) {
+	if(!predefinedApp)
+		app = express();
+	else
+		app=predefinedApp;
+
+	var middlewares= require('require-all')({
+	  dirname     :  __dirname+'/middlewares',
+	  excludeDirs :  /^\.(git|svn)$/,
+	  recursive   : true
+	});
 
 
-var app = express();
 
-middlewares.cors(app); //cors on the top
-middlewares.bodyParser(app);
+	middlewares.cors(app); //cors on the top
+	middlewares.bodyParser(app);
 
-app.use(middlewares.busboy);
-app.use(middlewares.aggregateParams);
+	app.use(middlewares.busboy);
+	app.use(middlewares.aggregateParams);
 
-app.use(middlewares.routeValidate);
-app.use(middlewares.routeOptions());
+	app.use(middlewares.routeValidate);
+	app.use(middlewares.routeOptions());
 
-app.use(middlewares.token());
-app.use(middlewares.queryModify());
-app.use(middlewares.safeAttributes());
+	app.use(middlewares.token());
+	app.use(middlewares.queryModify());
+	app.use(middlewares.safeAttributes());
 
-middlewares.routeLink.index(app);
+	middlewares.routeLink.index(app);
 
-module.exports= app;
+	return app;
+};
