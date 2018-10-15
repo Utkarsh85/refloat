@@ -1,6 +1,7 @@
 var Ajv = require('ajv');
 var ObjectId= require('mongodb').ObjectId;
 var addAdditionalSchema = require('../../validation/additionalSchema');
+var _= require('lodash');
 
 var validationConfig={};
 try
@@ -12,13 +13,15 @@ catch(err)
 
 }
 
-if(!validationConfig.rules)
-	validationConfig.rules={};
+var modifiedValidationConfig= _.cloneDeep(validationConfig);
 
-validationConfig.rules.useDefaults= false; //Don't useDefaults
+if(!modifiedValidationConfig.rules)
+	modifiedValidationConfig.rules={};
 
-var v = new Ajv(validationConfig.rules);
-v=addAdditionalSchema(v,validationConfig);
+modifiedValidationConfig.rules.useDefaults= false; //Don't useDefaults
+
+var v = new Ajv(modifiedValidationConfig.rules);
+v=addAdditionalSchema(v,modifiedValidationConfig);
 
 v.addFormat('ObjectId', function (id) {
 	if(ObjectId.isValid(id))

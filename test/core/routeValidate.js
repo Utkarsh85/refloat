@@ -176,4 +176,18 @@ describe('Testing core.routeValidate',function () {
 		}]);
 	});
 
+	it('Should not change validationConfig after require',function (done) {
+		clearRequire.all();
+
+		fs.writeFileSync(path.resolve('./config/validation.js'),'module.exports={rules:{useDefaults:true,coerceTypes:true}}','utf8');
+		
+		var validationConfigBefore= require(require('path').resolve('./config/validation.js'));
+		var routeValidateAfterValidationConfigDefined= require('../../app/core/middlewares/routeValidate');
+		var validationConfigAfter= require(require('path').resolve('./config/validation.js'));
+
+		expect(validationConfigBefore).to.deep.equal(validationConfigAfter);
+		done();
+		
+	});
+
 })
