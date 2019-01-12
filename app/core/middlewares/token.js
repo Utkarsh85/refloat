@@ -15,6 +15,21 @@ catch(err)
 
 module.exports=function () {
 	return function (req,res,next) {
+		
+		if(typeof(req.user)== "object")
+		{
+			req.user.getUser = function () {
+				return req.user.auth || defaults['not_authenticated_default'];
+			};
+		}
+		else
+		{
+			req.user={
+				getUser: function () {
+					return req.user.auth || defaults['not_authenticated_default'];
+				}
+			};
+		}
 
 		if(middlewareConfig.tokenMiddleware === false)
 		{
@@ -38,7 +53,6 @@ module.exports=function () {
 
 			    if( acl.verify({auth:authName,controller:req.options.controller, action:req.options.action}) )
 			    {
-					req.user={};
 					req.user.id=decoded.base;
 					req.user.auth=authName;
 					return next();

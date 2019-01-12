@@ -161,4 +161,112 @@ describe('Testing core.acltoken',function () {
 			done();
 		}]);
 	});
+
+
+	it('Should have req.user and req.user.getUser in all req chain',function (done) {
+
+		clearRequire.all();
+		fs.writeFileSync(path.resolve('./config/acl.js'),'module.exports={routes:{not_authenticated:{User:{create:true}}}}','utf8');
+		fs.writeFileSync(path.resolve('./config/token.js'),'module.exports={secret:\'my secret\'}','utf8');
+		var token= require('../../app/core/middlewares/token');
+		
+		chain({
+			headers:{},
+			options:{action:'create',controller:'User'}
+		},[function (ctx,next) {
+			var responseInst= new responseClass();
+
+			var res=token()(ctx,responseInst,next);
+		},function (ctx,next) {
+			expect(ctx).to.have.property('user').to.have.property('getUser');
+			done();
+		}]);
+	});
+
+	it('Should have req.user.getUser should return the not_authenticated user',function (done) {
+
+		clearRequire.all();
+		fs.writeFileSync(path.resolve('./config/acl.js'),'module.exports={routes:{not_authenticated:{User:{create:true}}}}','utf8');
+		fs.writeFileSync(path.resolve('./config/token.js'),'module.exports={secret:\'my secret\'}','utf8');
+		var token= require('../../app/core/middlewares/token');
+		
+		chain({
+			headers:{},
+			options:{action:'create',controller:'User'}
+		},[function (ctx,next) {
+			var responseInst= new responseClass();
+
+			var res=token()(ctx,responseInst,next);
+		},function (ctx,next) {
+			expect(ctx).to.have.property('user').to.have.property('getUser');
+			expect(ctx.user.getUser()).to.be.equal('not_authenticated');
+			done();
+		}]);
+	});
+
+	it('Should have req.user.getUser should return the authenticated user',function (done) {
+
+		clearRequire.all();
+		fs.writeFileSync(path.resolve('./config/acl.js'),'module.exports={routes:{authenticated:{User:{create:true}}}}','utf8');
+		fs.writeFileSync(path.resolve('./config/token.js'),'module.exports={secret:\'my secret\'}','utf8');
+		var token= require('../../app/core/middlewares/token');
+		var tokenLib=require('../../app/token');
+
+		chain({
+			headers:{authorization:'Bearer '+tokenLib.create('2')},
+			options:{action:'create',controller:'User'}
+		},[function (ctx,next) {
+			var responseInst= new responseClass();
+
+			var res=token()(ctx,responseInst,next);
+		},function (ctx,next) {
+			expect(ctx).to.have.property('user').to.have.property('getUser');
+			expect(ctx.user.getUser()).to.be.equal('authenticated');
+			done();
+		}]);
+	});
+
+	it('Should have req.user.getUser should return the named admin user',function (done) {
+
+		clearRequire.all();
+		fs.writeFileSync(path.resolve('./config/acl.js'),'module.exports={routes:{admin:{User:{create:true}}}}','utf8');
+		fs.writeFileSync(path.resolve('./config/token.js'),'module.exports={secret:\'my secret\'}','utf8');
+		var token= require('../../app/core/middlewares/token');
+		var tokenLib=require('../../app/token');
+
+		chain({
+			headers:{authorization:'Bearer '+tokenLib.create('2',{auth:'admin'})},
+			options:{action:'create',controller:'User'}
+		},[function (ctx,next) {
+			var responseInst= new responseClass();
+
+			var res=token()(ctx,responseInst,next);
+		},function (ctx,next) {
+			expect(ctx).to.have.property('user').to.have.property('getUser');
+			expect(ctx.user.getUser()).to.be.equal('admin');
+			done();
+		}]);
+	});
+
+	it('Should have req.user.getUser should return the default not_authenticated user',function (done) {
+
+		clearRequire.all();
+		fs.writeFileSync(path.resolve('./config/acl.js'),'module.exports={not_authenticated_default:"public",routes:{public:{User:{create:true}}}}','utf8');
+		fs.writeFileSync(path.resolve('./config/token.js'),'module.exports={secret:\'my secret\'}','utf8');
+		var token= require('../../app/core/middlewares/token');
+		var tokenLib=require('../../app/token');
+
+		chain({
+			headers:{},
+			options:{action:'create',controller:'User'}
+		},[function (ctx,next) {
+			var responseInst= new responseClass();
+
+			var res=token()(ctx,responseInst,next);
+		},function (ctx,next) {
+			expect(ctx).to.have.property('user').to.have.property('getUser');
+			expect(ctx.user.getUser()).to.be.equal('public');
+			done();
+		}]);
+	});
 })
