@@ -9,7 +9,7 @@ try
 }
 catch(err)
 {
-	console.log(err);
+	// console.log(err);
 }
 
 module.exports= function () {
