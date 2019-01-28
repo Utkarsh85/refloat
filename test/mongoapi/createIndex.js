@@ -16,7 +16,7 @@ describe('Testing mongoapi.createIndex',function () {
 
 		getDb()
 		.then(function (db) {
-			return db.collection('user').dropAllIndexes();
+			return db.collection('user').dropIndexes();
 		})
 		.then(function () {
 			done();
@@ -29,7 +29,7 @@ describe('Testing mongoapi.createIndex',function () {
 	beforeEach(function (done) {
 		getDb()
 		.then(function (db) {
-			return db.collection('user').dropAllIndexes();
+			return db.collection('user').dropIndexes();
 		})
 		.then(function () {
 			done();

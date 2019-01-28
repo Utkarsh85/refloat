@@ -11,6 +11,7 @@ describe('Testing mongoapi.create',function () {
 	beforeEach(function (done) {
 		getDb()
 		.then(function (db) {
+			// console.log(db)
 			return db.collection('user').deleteMany({});
 		})
 		.then(function (users) {

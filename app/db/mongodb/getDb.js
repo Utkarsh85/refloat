@@ -9,7 +9,7 @@ try
 }
 catch(err)
 {
-
+	console.log(err);
 }
 
 module.exports= function () {
@@ -23,12 +23,12 @@ module.exports= function () {
 		{
 			var connectionString= connectionConfig.connectionString || 'mongodb://localhost:27017/test';
 
-		    MongoClient.connect( connectionString, function( err, db ) {
+		    MongoClient.connect( connectionString,{useNewUrlParser: true}, function( err, client ) {
 		    	if(err)
 		    		return reject(err);
 		    	else
 		    	{
-					_db = db;
+					_db = client.db();
 		    		return resolve(_db);
 		    	}
 		    });

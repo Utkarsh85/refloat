@@ -1,5 +1,5 @@
 var queryHelper= require('./utils/queryHelper');
-
+var mongoProject= require('mongo-project');
 module.exports= function (db,modelName,query,projection) {
 	
 	var fullQuery;
@@ -11,7 +11,7 @@ module.exports= function (db,modelName,query,projection) {
 
 	if(projection)
 	{
-		fullQuery= db.collection( modelName ).findOne(queryObj,projection);
+		fullQuery= db.collection( modelName ).findOne(queryObj,projection).then(obj=>{ return mongoProject(obj, projection)});
 	}
 	else
 	{

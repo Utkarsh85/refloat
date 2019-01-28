@@ -43,7 +43,7 @@ describe('Testing mongoapi.destroy',function () {
 		.then(function (db) {
 			_db=db;
 			// console.log(newmodel);
-			return db.collection('user').insert({name:'hello'});
+			return db.collection('user').insertOne({name:'hello'});
 		})
 		.then(function (res) {
 			var newmodel=destroy(input);
@@ -67,7 +67,7 @@ describe('Testing mongoapi.destroy',function () {
 		getDb()
 		.then(function (db) {
 			// console.log(newmodel);
-			return db.collection('user').insert({name:'hello'});
+			return db.collection('user').insertOne({name:'hello'});
 		})
 		.then(function (res) {
 			var newmodel=destroy(input);

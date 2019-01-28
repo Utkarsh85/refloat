@@ -10,7 +10,7 @@ module.exports= function (db,modelName,query,projection) {
 
 	if(projection)
 	{
-		fullQuery= db.collection( modelName ).find(queryObj,projection);
+		fullQuery= db.collection( modelName ).find(queryObj).project(projection);
 	}
 	else
 	{
