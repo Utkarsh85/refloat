@@ -29,6 +29,7 @@ module.exports= function () {
 		    	else
 		    	{
 					_db = client.db();
+					_db.refloat_client= client;
 		    		return resolve(_db);
 		    	}
 		    });
