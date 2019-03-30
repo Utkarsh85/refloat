@@ -66,13 +66,13 @@ describe('Testing validation library',function () {
 
 	it('Should consider references as strings',function (done) {
 		var validation=require('../../app/validation');
-		var schema={reference:{user:{mode:'User'}},attributes:{properties:{name:{type:'string'}}}};
-		var instance={user:'6552524klhkh'};
+		var schema={reference:{user:{model:'User'}},attributes:{properties:{name:{type:'string'}}}};
+		var instance={user:'lfkjfnbsnklhkh'};
 
 		validation(schema,instance)
 		.then(function (instance) {
 			// console.log(instance);
-			expect(instance).to.have.property('user','6552524klhkh');
+			expect(instance).to.have.property('user','lfkjfnbsnklhkh');
 			done();
 		})
 		.catch(function (err) {

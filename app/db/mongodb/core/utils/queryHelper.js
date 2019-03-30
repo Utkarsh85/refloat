@@ -3,6 +3,10 @@ var ObjectID = require('mongodb').ObjectID;
 var queryHelper= {
 	_id: function (id) {
 		var queryObj={};
+		if(id == null)
+		{
+			return null;
+		}
 		if( ObjectID.isValid(id) && typeof(id)!='number')
 		{
 			queryObj._id= new ObjectID(id);
@@ -12,7 +16,7 @@ var queryHelper= {
 			queryObj._id=id;
 			return queryObj;
 		}
-		else if(typeof(id)==="object")
+		else if(id && typeof(id)==="object")
 		{
 			if(id.hasOwnProperty('_id') && ObjectID.isValid(id._id) && typeof(id._id)!='number')
 				id._id= new ObjectID(id._id);

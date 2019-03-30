@@ -27,13 +27,33 @@ describe('Testing id2_id library',function () {
 		done();
 	});
 
-	it('Should return _id in place of id but should be a string if id is a string',function (done) {
+	it('Should return _id if an ObjectId string is passed',function (done) {
 		var id2_id=require('../../app/db/mongodb/utils/id2_id');
 		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
-		var obj= id2_idFunc({id:'2',password:0});
+		var obj= id2_idFunc('507f1f77bcf86cd799439011');
+		expect(obj).to.have.property('_id');
+		expect(obj._id.toHexString()).to.equal('507f1f77bcf86cd799439011');
+		// expect(obj).to.have.property('password',0);
+		done();
+	});
+
+	it('Should return _id if a numeric string is passed',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
+		var obj= id2_idFunc('2');
 		expect(obj).to.have.property('_id');
 		expect(obj._id).to.equal('2');
-		expect(obj).to.have.property('password',0);
+		// expect(obj).to.have.property('password',0);
+		done();
+	});
+
+	it('Should return _id if a general string is passed',function (done) {
+		var id2_id=require('../../app/db/mongodb/utils/id2_id');
+		var id2_idFunc=id2_id({schema:{reference: {user:{model:'User'}}}});
+		var obj= id2_idFunc('sssss');
+		expect(obj).to.have.property('_id');
+		expect(obj._id).to.equal('sssss');
+		// expect(obj).to.have.property('password',0);
 		done();
 	});
 

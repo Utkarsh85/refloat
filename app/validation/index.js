@@ -57,9 +57,9 @@ module.exports= function (schema,instance,removeDefaults) {
 		for(var ref in schema.reference)
 		{
 			if(schema.reference[ref].hasOwnProperty('multi') && schema.reference[ref].multi==true)
-				schema.attributes.properties[ref]= {type:"array",items:{type:'string',format:'ObjectId'}};
+				schema.attributes.properties[ref]= {type:"array",items:{type:'string'}};
 			else
-				schema.attributes.properties[ref]= {type:"string",format:'ObjectId'};
+				schema.attributes.properties[ref]= {type:"string"};
 		}
 	}
 

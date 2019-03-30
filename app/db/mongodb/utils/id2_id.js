@@ -6,12 +6,11 @@ var ajv= require('ajv')();
 
 module.exports= function (model) {
 	var processFunc= function (obj) {
-		if(queryHelper.checkObjectId(obj))  // if obj turns out to be an ObjectId or a string of type ObjectId
-		{
-			obj=queryHelper._id(obj);
-			return obj;
-		}
-
+		obj=queryHelper._id(obj);
+		// if(queryHelper.checkObjectId(obj))  // if obj turns out to be an ObjectId or a string of type ObjectId
+		// {
+		// 	return obj;
+		// }
 		var tempObj;
 		if(obj)
 			tempObj= extend({},obj);
