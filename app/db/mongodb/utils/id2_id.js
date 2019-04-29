@@ -21,6 +21,12 @@ module.exports= function (model) {
 		references= references.length ? references.concat('id') : ['id'];
 
 		var tempObj = parser.parse(tempObj).mapValues(function(field, stringId){
+			if(field.includes('.'))
+			{
+				var splitFields= field.split('.');
+				field= splitFields[splitFields.length-1];
+			}
+			
 			if(references.indexOf(field)>=0)
 			{
 				if(typeof(stringId)=="string" && ObjectID.isValid(stringId) && typeof(stringId)!='number' )
