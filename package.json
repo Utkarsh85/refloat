@@ -4,7 +4,7 @@
   "description": "Server Framework",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "mocha --recursive --exit"
   },
   "keywords": [
     "server",
