@@ -34,6 +34,7 @@
     "deepmerge": "^1.3.2",
     "dot-prop": "^4.1.1",
     "express": "^4.17.1",
+    "fast-deepclone": "^1.0.1",
     "flat": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",

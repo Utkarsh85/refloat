@@ -1,4 +1,5 @@
 var merge = require('deepmerge');
+var deepClone = require('fast-deepclone');
 var objectTraverseClean= require('object-traverse-clean');
 
 module.exports= function (req,res,next) {
@@ -6,17 +7,17 @@ module.exports= function (req,res,next) {
 
 	if(typeof(req.body) === "object")
 	{
-		params= merge(req.body,params);
+		params= merge(deepClone(req.body,true),params);
 	}
 
 	if(typeof(req.params) === "object")
 	{
-		params= merge(req.params,params);
+		params= merge(deepClone(req.params,true),params);
 	}
 
 	if(typeof(req.query) ==="object")
 	{
-		params= merge(req.query,params);
+		params= merge(deepClone(req.query,true),params);
 	}
 
 	req.Params= objectTraverseClean(params);
