@@ -37,8 +37,8 @@ module.exports=function () {
 		}
 		else
 		{
-			//has authorization header
-			if(req.headers.hasOwnProperty('authorization'))
+			// authorized requests
+			if(req.headers.hasOwnProperty('authorization') && req.headers['authorization'].startsWith('Bearer '))
 			{
 				var bearerToken=req.headers['authorization'].split('Bearer ')[1];
 
@@ -61,7 +61,7 @@ module.exports=function () {
 			    	return res.status(401).json({msg:"Unauthorized Access",code:4301,status:401});
 			}
 
-			//No authorization header
+			// un-authorized requests
 			else
 			{
 				if( acl.verify({auth:defaults['not_authenticated_default'],controller:req.options.controller, action:req.options.action}) )
