@@ -23,7 +23,7 @@ module.exports= function () {
 		{
 			var connectionString= connectionConfig.connectionString || 'mongodb://localhost:27017/test';
 
-		    MongoClient.connect( connectionString,{useNewUrlParser: true}, function( err, client ) {
+		    MongoClient.connect( connectionString,{useUnifiedTopology: true}, function( err, client ) {
 		    	if(err)
 		    		return reject(err);
 		    	else
