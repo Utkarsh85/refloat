@@ -34,6 +34,7 @@
     "deepmerge": "^4.2.2",
     "dot-prop": "^5.1.1",
     "express": "^4.17.1",
+    "fast-copy": "^2.1.1",
     "flat": "^5.0.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
@@ -45,8 +46,7 @@
     "omit-deep": "^0.3.0",
     "path-to-regexp": "^1.7.0",
     "require-all": "^2.2.0",
-    "uuid": "^8.3.2",
-    "fast-copy": "^2.1.1"
+    "uuid": "^8.3.2"
   },
   "directories": {
     "test": "test"
