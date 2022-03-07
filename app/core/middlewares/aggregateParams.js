@@ -1,6 +1,6 @@
 var merge = require('deepmerge');
 var copy = require('fast-copy');
-var objectTraverseClean= require('object-traverse-clean');
+var objectTraverseClean= require('./utils/object-traverse-clean');
 
 module.exports= function (req,res,next) {
 	var params={};
